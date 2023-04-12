@@ -1,17 +1,16 @@
 import React from 'react'
-import Header from 'components/header/Header'
-import Sidebar from 'components/sidebar/Sidebar'
-import MainTable from 'components/mainTable/MainTable'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import TablePage from 'pages/TablePage'
+import StepsPage from 'pages/StepsPage'
 
 function App() {
   return (
-    <>
-      <Header />
-      <Sidebar />
-      <div className="container">
-        <MainTable />
-      </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<TablePage />} />
+        <Route path="/steps" element={<StepsPage />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
