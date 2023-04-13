@@ -3,87 +3,112 @@ import './styles.scss'
 import axiosInstance from 'axiosInstance'
 import {
   Table,
-  Tbody,
-  Tr,
-  Td,
+  TableBody,
+  TableCell,
   TableContainer,
-  TableCaption,
-  Thead,
-  Th,
-  useDisclosure,
+  TableHead,
+  TableRow,
+  Paper,
+  Link,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
+  Typography,
   Button,
-  Link
-} from '@chakra-ui/react'
+  makeStyles,
+  createStyles,
+} from '@material-ui/core'
+
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    paper: {
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+      margin: '10px',
+      maxWidth: '620px',
+    },
+  })
+)
 
 function MainTable() {
-  const { isOpen, onOpen, onClose } = useDisclosure()
   const [data, setData] = useState([])
-
-  console.log(data)
+  const [open, setOpen] = useState(false)
+  const classes = useStyles()
 
   useEffect(() => {
-    axiosInstance.get('/api/user')
-      .then(response => {
+    axiosInstance
+      .get('/api/user')
+      .then((response) => {
         setData(response.data)
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error)
       })
   }, [])
+
+  const handleOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
 
   return (
     <>
       <Link
         href='https://api.instagram.com/oauth/authorize?client_id=136615522709924&redirect_uri=https://vostokmedservice.com.ua&scope=basic&response_type=code'
-        isExternal
-      >Chakra UI</Link>
-      <TableContainer>
-        <Table variant='simple'>
-          <TableCaption>Users data</TableCaption>
-          <Thead>
-            <Tr>
-              <Th>Id</Th>
-              <Th>Name</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {data.map(item => (
-              <Tr
-                _hover={{ background: 'gray.100', cursor: 'pointer' }}
-                transition="all 0.2s ease-in-out"
-                onClick={onOpen}
+        target='_blank'
+        rel='noopener'
+      >
+        Material-UI
+      </Link>
+      <TableContainer component={Paper}>
+        <Table aria-label='Users data'>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Name</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map((item) => (
+              <TableRow
+                hover
+                onClick={handleOpen}
                 key={item.id}
               >
-                <Td>{item.id}</Td>
-                <Td>{item.name}</Td>
-              </Tr>
+                <TableCell>{item.id}</TableCell>
+                <TableCell>{item.name}</TableCell>
+              </TableRow>
             ))}
-          </Tbody>
+          </TableBody>
         </Table>
       </TableContainer>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
+      <Modal
+        className={classes.modal}
+        open={open}
+        onClose={handleClose}
+      >
+        <div className={classes.paper}>
+          <Typography variant='h6' gutterBottom>
+            Modal Title
+          </Typography>
+          <Typography variant='body1' gutterBottom>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo, illo dolor dolorem facilis quis qui soluta. Vitae quos voluptate nam recusandae? Distinctio, sapiente ad. Suscipit laboriosam, laborum rerum quis perferendis nesciunt necessitatibus dolores at explicabo perspiciatis iusto voluptates sequi labore deserunt ab consequuntur eius ut est nobis quidem? Quas, dolorum?
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant='ghost'>Secondary Action</Button>
-          </ModalFooter>
-        </ModalContent>
+          </Typography>
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={handleClose}
+          >
+            Close
+          </Button>
+        </div>
       </Modal>
     </>
   )
