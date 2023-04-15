@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import './styles.scss'
-import axiosInstance from 'axiosInstance'
 import {
   Table,
   TableBody,
@@ -40,14 +39,10 @@ function MainTable() {
   const classes = useStyles()
 
   useEffect(() => {
-    axiosInstance
-      .get('/api/user')
-      .then((response) => {
-        setData(response.data)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+    setData([{id: 1, name: 'check'}])
+    const currentUrl = window.location.href
+    console.log(currentUrl)
+    //TODO SEND ACCESS TOKEN TO AXENDR TO LET HIM MAKE A CALL TO instagram/api
   }, [])
 
   const handleOpen = () => {
@@ -61,7 +56,7 @@ function MainTable() {
   return (
     <>
       <Link
-        href='https://api.instagram.com/oauth/authorize?client_id=136615522709924&redirect_uri=https://vostokmedservice.com.ua&scope=basic&response_type=code'
+        href='https://api.instagram.com/oauth/authorize?client_id=799742371516522&redirect_uri=https://react-sytem.space/&scope=user_profile,user_media&response_type=code'
         target='_blank'
         rel='noopener'
       >
